@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, CardHeader, Button, Textarea, Checkbox, Avatar } from "@nextui-org/react";
+import Link from 'next/link';
+import { Card, CardHeader, Button, Textarea, Checkbox, Avatar, useDisclosure, Modal, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import axios from 'axios';
 import { remark } from 'remark';
 import html from 'remark-html';
@@ -15,6 +16,21 @@ export default function Home() {
   const [result, setResult] = useState('');
   const [isAvatarHovered, setIsAvatarHovered] = useState(false);
   const textRef = useRef<HTMLTextAreaElement>(null);
+  const [accessKey, setAccessKey] = useState<string | undefined>(() => {
+    if (typeof window !== 'undefined') {
+      const storedAccessKey = localStorage.getItem('accessKey');
+      return storedAccessKey || '';
+    }
+  });
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const handleAccessKeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setAccessKey(newValue);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('accessKey', newValue);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
@@ -29,15 +45,23 @@ export default function Home() {
       setError('');
       setResult('');
       setIsLoading(true);
-      const res = await axios.post('/api/generate', { prompt: text });
+      const res = await axios.post('/api/generate',
+        { prompt: text },
+        {
+          headers: {
+            authorization: accessKey
+          }
+        }
+      );
+
       const { data } = res;
       const { candidates } = data[0];
       const { output } = candidates[0];
       setResult(output);
       setIsLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       setIsLoading(false);
-      setError('Something went wrong');
+      setError(err.response.data.error || 'Something went wrong while generating the text, please try again later.');
       console.error(err);
     }
   }
@@ -57,16 +81,18 @@ export default function Home() {
       setMarkdown(processed.toString());
     })();
 
-    textRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (result) {
+      textRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [result]);
 
   return (
-    <main className="min-h-screen flex flex-col gap-10 mt-10 md:mt-20 relative">
+    <>
       <a className={'flex flex-row items-center justify-center gap-5' + (isAvatarHovered ? ' animate-bounce' : '')} href="https://github.com/sauravhathi/google-palm-ai" target="_blank" rel="noopener noreferrer">
         <h1 className="text-4xl font-bold text-center">
           Google Palm Ai
         </h1>
-        <Avatar isBordered color="primary" size='lg' src="https://github.com/sauravhathi/sauravhathi/assets/61316762/a333b8ba-a49e-43ce-b81c-4481f0e8fce0" onMouseEnter={() => setIsAvatarHovered(true)} onMouseLeave={() => setIsAvatarHovered(false)} className={isAvatarHovered ? 'w-16 h-16' : 'w-12 h-12'} />
+        <Avatar isBordered color="primary" size='lg' src="https://github.com/sauravhathi/sauravhathi/assets/61316762/a333b8ba-a49e-43ce-b81c-4481f0e8fce0" onMouseEnter={() => setIsAvatarHovered(true)} onMouseLeave={() => setIsAvatarHovered(false)} className="w-16 h-16" />
       </a>
       <div className="flex flex-col items-center justify-center gap-10 px-10 md:px-0">
         <div className="max-w-2xl w-full flex flex-col gap-2">
@@ -84,39 +110,79 @@ export default function Home() {
               maxRows={20}
             />
           </div>
-          <Button
-            isLoading={isLoading}
-            color="warning"
-            variant="shadow"
-            onClick={handleSubmit}
-            radius='sm'
-            spinner={
-              <svg
-                className="animate-spin h-5 w-5 text-current"
-                fill="none"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  fill="currentColor"
-                />
-              </svg>
-            }
-            className="self-end"
-            isDisabled={isLoading}
-          >
-            {isLoading ? 'Loading...' : 'Submit'}
-          </Button>
+          <div className="flex flex-row justify-end gap-5">
+            <Button onPress={onOpen} color="primary" radius='sm'>Set Access Key</Button>
+            <Modal
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              placement="top-center"
+              radius='sm'
+            >
+              <ModalContent>
+                {(onClose) => (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">Access Key</ModalHeader>
+                    <ModalBody>
+                      <Input
+                        autoFocus
+                        placeholder="Enter your access key"
+                        variant="faded"
+                        radius='sm'
+                        value={accessKey}
+                        onChange={handleAccessKeyChange}
+                      />
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button radius='sm' color="danger" variant="flat" onPress={onClose}>
+                        Close
+                      </Button>
+                      <Button radius='sm' color="primary" onPress={onClose}>
+                        Submit
+                      </Button>
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
+            <Button color="primary" variant="ghost" radius='sm' onClick={() => setAccessKey('')}>
+              <Link href="/generate_access_key">
+                Generate Access Key
+              </Link>
+            </Button>
+            <Button
+              isLoading={isLoading}
+              color="warning"
+              variant="shadow"
+              onClick={handleSubmit}
+              radius='sm'
+              spinner={
+                <svg
+                  className="animate-spin h-5 w-5 text-current"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    fill="currentColor"
+                  />
+                </svg>
+              }
+              className="self-end"
+              isDisabled={isLoading}
+            >
+              {isLoading ? 'Loading...' : 'Generate'}
+            </Button>
+          </div>
         </div>
         <div className="max-w-2xl w-full flex flex-col gap-4" ref={textRef as any}>
           <h4 className="font-bold text-large">Result</h4>
@@ -163,11 +229,6 @@ export default function Home() {
           </Card>
         </div>
       </div>
-      <footer className="flex flex-col items-center justify-center gap-2 mb-10">
-        <p className="text-gray-500 text-sm">
-          Made with ❤️ by <a href="https://github.com/sauravhathi" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:underline">Saurav Hathi</a>
-        </p>
-      </footer>
-    </main >
+    </>
   )
 }
