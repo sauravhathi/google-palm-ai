@@ -1,7 +1,7 @@
 {
     "functions": {
       "pages/api/accesskey.ts": {
-        "memory": 3008,
+        "memory": 1024,
         "maxDuration": 10
       },
       "pages/api/generate.ts": {
