@@ -1,34 +1,92 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Google Palm Ai
+
+Welcome to Google Palm Ai, a web application for generating human-like text responses with Google Palm Ai Model. Google Palm Ai is built with React and NextUI for a seamless user experience.
+
+## Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+- Generate human-like text responses with Google Palm Ai Model.
+- User-friendly interface for entering prompts.
+- Option to view results in Markdown format.
+- Copy generated text with a single click.
+- Built with React and NextUI for a seamless user experience.
+- Created with ❤️ by [Saurav Hathi](https://github.com/sauravhathi).
+
+## Tech Stack
+
+Google Palm Ai is built using the following technologies:
+
+- [React](https://reactjs.org/) - A JavaScript library for building user interfaces.
+- [Next.js](https://nextjs.org/) - A React framework for building server-rendered applications.
+- [NextUI](https://nextui.org/) - A UI framework for React applications.
+- [axios](https://github.com/axios/axios) - A promise-based HTTP client for making network requests.
+- [remark](https://github.com/remarkjs/remark) - A Markdown processor powered by plugins.
+- [html](https://github.com/remarkjs/remark-html) - A plugin for converting Markdown to HTML.
 
 ## Getting Started
 
-First, run the development server:
+To get started with Google Palm Ai, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+1. Clone the repository:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   git clone https://github.com/sauravhathi/google-palm-ai.git
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. Install the required dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```bash
+   cd google-palm-ai
+   npm install
 
-## Learn More
+   # or
 
-To learn more about Next.js, take a look at the following resources:
+   yarn
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Start the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   npm run dev
 
-## Deploy on Vercel
+   # or
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   yarn dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. Open your browser and visit [http://localhost:3000](http://localhost:3000) to access the application.
+
+## Usage
+
+1. Enter your prompt in the "Ask a question" text area.
+2. Click the "Submit" button to generate a response.
+3. View the generated text in the "Result" section.
+4. Toggle the "Markdown" checkbox to switch between Markdown and plain text view.
+5. Click the "Copy" button to copy the generated text to your clipboard.
+
+## Contributing
+
+Contributions to Google Palm Ai are welcome! If you'd like to contribute, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them with descriptive messages.
+4. Push your changes to your fork.
+5. Create a pull request to the `master` branch of the original repository.
+
+Please ensure your code follows best practices and includes relevant tests if applicable.
+
+## License
+
+Google Palm Ai is licensed under the [MIT License](https://github.com/sauravhathi/google-palm-ai/blob/master/LICENSE).
+
+---
+
+Made with ❤️ by [Saurav Hathi](https://github.com/sauravhathi). Enjoy using Google Palm Ai!
