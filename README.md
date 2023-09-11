@@ -10,6 +10,7 @@ Welcome to Google Palm Ai, a web application for generating human-like text resp
 
 ## Table of Contents
 - [Features](#features)
+- [API Usage](#api-usage)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
@@ -22,8 +23,22 @@ Welcome to Google Palm Ai, a web application for generating human-like text resp
 - User-friendly interface for entering prompts.
 - Option to view results in Markdown format.
 - Copy generated text with a single click.
+- Generate an access key for using the API.
+- Set your access key in the application for easy access.
 - Built with React and NextUI for a seamless user experience.
 - Created with ❤️ by [Saurav Hathi](https://github.com/sauravhathi).
+
+## API Usage
+
+| **Feature** | **Value** |
+| --- | --- |
+| **Max Requests** | 100 |
+| **Expiration** | 3 days |
+| **Access Key Generation** | [Generate Access Key](https://google-palm-ai.vercel.app/generate_access_key) |
+| **API Endpoint** | [https://google-palm-ai.vercel.app/api/generate](https://google-palm-ai.vercel.app/api/generate) |
+| **Request Body** | `prompt` |
+| **Request Headers** | `authorization` |
+| **Request Body Example** | `{ "prompt": "Hello, my name is" }` |
 
 ## Tech Stack
 
@@ -71,11 +86,14 @@ To get started with Google Palm Ai, follow these steps:
 
 ## Usage
 
-1. Enter your prompt in the "Ask a question" text area.
-2. Click the "Submit" button to generate a response.
-3. View the generated text in the "Result" section.
-4. Toggle the "Markdown" checkbox to switch between Markdown and plain text view.
-5. Click the "Copy" button to copy the generated text to your clipboard.
+1. Generate an access key by visiting the [Generate Access Key](https://google-palm-ai.vercel.app/generate_access_key) page.
+2. Copy the access key and set it in the application by clicking the "Set Access Key" button.
+3. Visit the [Home](https://google-palm-ai.vercel.app/) page to generate text.
+4. Enter your prompt in the "Ask a question" text area.
+5. Click the "Submit" button to generate a response.
+6. View the generated text in the "Result" section.
+7. Toggle the "Markdown" checkbox to switch between Markdown and plain text view.
+8. Click the "Copy" button to copy the generated text to your clipboard.
 
 ## Contributing
 
