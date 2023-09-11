@@ -104,7 +104,7 @@ export default function Home() {
       </a>
       <div className="flex flex-col items-center justify-center gap-10 px-5 md:px-0">
         <div className="max-w-2xl w-full flex flex-col gap-2">
-          <div>
+          <div className="flex flex-col gap-3">
             <label className="font-bold text-large">Ask a question</label>
             <textarea
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none bg-transparent"
