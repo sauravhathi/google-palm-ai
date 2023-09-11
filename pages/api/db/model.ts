@@ -26,7 +26,14 @@ const accessKeySchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    expiresAt: Date,
+    expiresAt: {
+        type: Date,
+        default: () => {
+            const expiresAt = new Date();
+            expiresAt.setDate(expiresAt.getDate() + 3);
+            return expiresAt;
+        }
+    },
 });
 
 const AccessKey = mongoose.models.AccessKey || mongoose.model('AccessKey', accessKeySchema);

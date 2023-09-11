@@ -6,10 +6,23 @@ connectDB();
 
 const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const domain = email.split('@')[1];
+    const parts = email.split('@');
+    const localPart = parts[0];
+    const domain = parts[1];
     const allowedDomains = ['gmail.com', 'lpu.in', 'outlook.com', 'yahoo.com'];
 
+    const minLocalPartLength = 5;
+    const maxLocalPartLength = 64;
+
     if (!allowedDomains.includes(domain)) {
+        return false;
+    }
+
+    if (localPart.length < minLocalPartLength || localPart.length > maxLocalPartLength) {
+        return false;
+    }
+
+    if (/^[0-9]/.test(localPart)) {
         return false;
     }
 
@@ -63,22 +76,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: "Invalid email" });
     }
 
-    const isExisting = await AccessKey.exists({ email });
-    console.log(isExisting);
-    if (isExisting) {
-        return res.status(400).json({ error: "Email already exists" });
+    const isExisting = await await AccessKey.findOne({ email });
+
+    if(isExisting){
+        return res.status(400).json({ error: `Email already exists, your access key is: ${isExisting.accessKey}` });
     }
 
     const accessKey = await generateAccessKey(email);
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 3);
 
     await AccessKey.create({
         accessKey,
         email,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        expiresAt,
     });
 
     return res.status(200).json({ accessKey });
