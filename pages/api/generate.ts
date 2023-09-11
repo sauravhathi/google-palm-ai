@@ -28,9 +28,9 @@ const client = new TextServiceClient({
 
 const options: TextGenerationOptions = {
     model: "models/text-bison-001",
-    temperature: 0.7,
+    temperature: 0.5,
     candidateCount: 1,
-    top_k: 0,
+    top_k: 50,
     top_p: 0.95,
     max_output_tokens: process.env.MAX_OUTPUT_TOKENS ? parseInt(process.env.MAX_OUTPUT_TOKENS) : 1024,
     stop_sequences: [],
