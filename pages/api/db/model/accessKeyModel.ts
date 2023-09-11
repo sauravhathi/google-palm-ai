@@ -36,6 +36,6 @@ const accessKeySchema = new mongoose.Schema({
     },
 });
 
-const AccessKey = mongoose.model('AccessKey', accessKeySchema);
+const AccessKey = mongoose.models.AccessKey || mongoose.model('AccessKey', accessKeySchema);
 
 export default AccessKey;
