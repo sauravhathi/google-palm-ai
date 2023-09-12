@@ -2,7 +2,7 @@
 
 <p align="center">
 
-  <img src="https://github.com/sauravhathi/google-palm-ai/assets/61316762/cdf10dea-a3c1-43ed-aa5c-d110514bc66c" alt="logo" style="width: 50%">
+  <img src="https://github.com/sauravhathi/google-palm-ai/assets/61316762/c6d44f33-be46-4215-9f47-90201f6d0d37" alt="logo" style="width: 50%">
 
 </p>
 
