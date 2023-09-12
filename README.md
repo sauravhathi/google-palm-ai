@@ -2,8 +2,8 @@
 
 <p align="center">
 
-  <img src="https://github.com/sauravhathi/google-palm-ai/assets/61316762/c6d44f33-be46-4215-9f47-90201f6d0d37" alt="logo" style="width: 50%">
-
+  <img src="https://github.com/sauravhathi/google-palm-ai/assets/61316762/7b811c0e-b334-42ae-9534-5b5424b21e97" alt="logo" style="width: 50%">
+  
 </p>
 
 Welcome to Google Palm Ai, a web application for generating human-like text responses with Google Palm Ai Model. Google Palm Ai is built with React and NextUI for a seamless user experience.
