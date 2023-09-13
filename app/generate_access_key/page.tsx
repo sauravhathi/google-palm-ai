@@ -35,101 +35,6 @@ export default function GenerateAccessKey() {
         }
     }
 
-    const sendEmail = async (email: string, otp: string): Promise<void> => {
-        try {
-            if (!email) {
-                setError('Please enter an email');
-                return;
-            }
-            setError('');
-            setAccessKey('');
-            setIsSendingEmail(false);
-            setIsLoading(true);
-            const mail = {
-                from: 'testing123@gmail.com',
-                to: email,
-                subject: 'Google Palm AI Access Key OTP',
-                text: `Your OTP is ${otp}`,
-                html: `
-                <!DOCTYPE html>
-                <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Google Palm AI Access Key OTP</title>
-                        <style>
-                            body {
-                                font-family: Arial, sans-serif;
-                                background-color: #f0f0f0;
-                                margin: 0;
-                                padding: 0;
-                            }
-
-                            .container {
-                                max-width: 600px;
-                                margin: 0 auto;
-                                background-color: #ffffff;
-                                border-radius: 5px;
-                                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-                            }
-
-                            .header {
-                                background-color: #0073e6;
-                                color: #ffffff;
-                                padding: 20px;
-                                text-align: center;
-                                border-top-left-radius: 5px;
-                                border-top-right-radius: 5px;
-                            }
-
-                            h1 {
-                                font-size: 24px;
-                                margin: 0;
-                            }
-
-                            .content {
-                                padding: 20px;
-                                text-align: center;
-                            }
-
-                            p {
-                                font-size: 18px;
-                                color: #333333;
-                                margin: 0;
-                            }
-
-                            .otp {
-                                font-size: 32px;
-                                font-weight: bold;
-                                color: #0073e6;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <div class="header">
-                                <h1>Google Palm AI Access Key OTP</h1>
-                            </div>
-                            <div class="content">
-                                <p>Your One-Time Password (OTP) is:</p>
-                                <p class="otp">${otp}</p>
-                            </div>
-                        </div>
-                    </body>
-                </html>
-                `
-            }
-            const res = await axios.post('/api/mail', mail);
-            if (res.data.success) {
-                setIsSendingEmail(true);
-                onOpen();
-            }
-            setIsLoading(false);
-        } catch (err: any) {
-            handleErrors(err);
-        }
-    }
-
     const otpGenerate = async (email: string): Promise<void> => {
         try {
             if (!email) {
@@ -142,10 +47,14 @@ export default function GenerateAccessKey() {
             }
             setError('');
             setAccessKey('');
-            setOtp('');
+            setIsSendingEmail(false);
             setIsLoading(true);
             const res = await axios.post('/api/otp_generate', { email });
-            sendEmail(email, res.data.otp);
+            if (res.data.success) {
+                setIsSendingEmail(true);
+                onOpen();
+            }
+            setIsLoading(false);
         } catch (err: any) {
             handleErrors(err);
         }
