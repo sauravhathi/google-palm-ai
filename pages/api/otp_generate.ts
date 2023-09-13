@@ -1,14 +1,10 @@
-import Otp from "./db/model/otpModel";
-import otpController from "./otpController";
+import otpController from "./controllers/otpController";
 import { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "./db/config";
-import methodNotAllowed from "./methodNotAllowed";
-
+import methodNotAllowed from "./utils/methodNotAllowed";
 
 async function otpHandler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return methodNotAllowed(res);
-  }
+  if (req.method !== "POST") return methodNotAllowed(res);
 
   const email = req.body.email;
 

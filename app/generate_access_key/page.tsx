@@ -8,8 +8,14 @@ export default function GenerateAccessKey() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [accessKey, setAccessKey] = useState('');
+    const [isSendingEmail, setIsSendingEmail] = useState(false);
     const [otp, setOtp] = useState('');
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+    const handleErrors = (err: { response: { data: { error: any; }; }; }, loading: boolean = false) => {
+        setIsLoading(loading);
+        setError(err.response.data.error || 'Something went wrong while generating the access key, please try again later.');
+    }
 
     const generateAccessKey = async (email: string): Promise<void> => {
         try {
@@ -25,9 +31,7 @@ export default function GenerateAccessKey() {
             setAccessKey(accessKey);
             setIsLoading(false);
         } catch (err: any) {
-            setIsLoading(false);
-            setError(err.response.data.error || 'Something went wrong while generating the access key, please try again later.');
-            console.error(err);
+            handleErrors(err);
         }
     }
 
@@ -39,37 +43,90 @@ export default function GenerateAccessKey() {
             }
             setError('');
             setAccessKey('');
+            setIsSendingEmail(false);
             setIsLoading(true);
             const mail = {
                 from: 'testing123@gmail.com',
                 to: email,
                 subject: 'Google Palm AI Access Key OTP',
                 text: `Your OTP is ${otp}`,
-                html:
-                    `<html>
-                    <title>Google Palm AI Access Key OTP</title>
+                html: `
+                <!DOCTYPE html>
+                <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Google Palm AI Access Key OTP</title>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                background-color: #f0f0f0;
+                                margin: 0;
+                                padding: 0;
+                            }
+
+                            .container {
+                                max-width: 600px;
+                                margin: 0 auto;
+                                background-color: #ffffff;
+                                border-radius: 5px;
+                                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+                            }
+
+                            .header {
+                                background-color: #0073e6;
+                                color: #ffffff;
+                                padding: 20px;
+                                text-align: center;
+                                border-top-left-radius: 5px;
+                                border-top-right-radius: 5px;
+                            }
+
+                            h1 {
+                                font-size: 24px;
+                                margin: 0;
+                            }
+
+                            .content {
+                                padding: 20px;
+                                text-align: center;
+                            }
+
+                            p {
+                                font-size: 18px;
+                                color: #333333;
+                                margin: 0;
+                            }
+
+                            .otp {
+                                font-size: 32px;
+                                font-weight: bold;
+                                color: #0073e6;
+                            }
+                        </style>
+                    </head>
                     <body>
-                        <div style="padding: 20px; border-radius: 10px;">
-                            <div style="padding: 20px; border-radius: 10px;">
-                                <h1 style="text-align: center;">Google Palm AI Access Key OTP</h1>
-                                <p style="text-align: center;">Your OTP is ${otp}</p>
+                        <div class="container">
+                            <div class="header">
+                                <h1>Google Palm AI Access Key OTP</h1>
                             </div>
-                            <div style="padding: 20px; border-radius: 10px; margin-top: 20px;">
-                                <p style="text-align: center;">Made with ❤️ by <a href="https://bit.ly/3sEXO8h" target="_blank">Saurav Hathi</a></p>
-                                <p style="text-align: center;">Follow me on <a href="https://bit.ly/sauravhathi" target="_blank">GitHub</a> | <a href="https://bit.ly/3R6hUSR" target="_blank">LinkedIn</a> | <a href="https://bit.ly/faq-tel" target="_blank">Telegram</a></p>
+                            <div class="content">
+                                <p>Your One-Time Password (OTP) is:</p>
+                                <p class="otp">${otp}</p>
                             </div>
                         </div>
                     </body>
-                </html>`
+                </html>
+                `
             }
-
-            const res = await axios.post('https://b-mailer-vuftqw44dq-uc.a.run.app/api/contact', mail);
-            alert('OTP sent to your email');
+            const res = await axios.post('/api/mail', mail);
+            if (res.data.success) {
+                setIsSendingEmail(true);
+                onOpen();
+            }
             setIsLoading(false);
         } catch (err: any) {
-            setIsLoading(false);
-            setError(err.response.data.error || 'Something went wrong while generating the access key, please try again later.');
-            console.error(err);
+            handleErrors(err);
         }
     }
 
@@ -79,17 +136,18 @@ export default function GenerateAccessKey() {
                 setError('Please enter an email');
                 return;
             }
+            if (isSendingEmail) {
+                setError('OTP already sent, please check your email');
+                return;
+            }
             setError('');
             setAccessKey('');
             setOtp('');
             setIsLoading(true);
             const res = await axios.post('/api/otp_generate', { email });
             sendEmail(email, res.data.otp);
-            setIsLoading(false);
         } catch (err: any) {
-            setIsLoading(false);
-            setError(err.response.data.error || 'Something went wrong while generating the access key, please try again later.');
-            console.error(err);
+            handleErrors(err);
         }
     }
 
@@ -106,11 +164,10 @@ export default function GenerateAccessKey() {
             if (res.data.success) {
                 generateAccessKey(email);
             }
+            setIsSendingEmail(false);
             setIsLoading(false);
         } catch (err: any) {
-            setIsLoading(false);
-            setError(err.response.data.error || 'Something went wrong while generating the access key, please try again later.');
-            console.error(err);
+            handleErrors(err);
         }
     }
 
@@ -126,44 +183,55 @@ export default function GenerateAccessKey() {
                 errorMessage={error}
                 description="Allowed domains: gmail.com, lpu.in, outlook.com, yahoo.com"
             />
-            <Button
-                isLoading={isLoading}
-                color="warning"
-                variant="shadow"
-                onPress={() => {
-                    onOpen();
-                    otpGenerate(email);
-                }}
-                radius='sm'
-                spinner={
-                    <svg
-                        className="animate-spin h-5 w-5 text-current"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                        />
-                        <path
-                            className="opacity-75"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            fill="currentColor"
-                        />
-                    </svg>
+            <div className="flex flex-row gap-2 justify-end">
+                {
+                    isSendingEmail && (
+                        <Button
+                            color="success"
+                            variant="shadow"
+                            className="self-end text-sm md:text-md"
+                            onPress={isOpen ? onOpenChange : onOpen}
+                        >
+                            Verify OTP
+                        </Button>
+                    )
                 }
-                className="self-end text-sm md:text-md"
-                isDisabled={isLoading}
-            >
-                {isLoading ? 'Loading...' : 'Generate Access Key'}
-            </Button>
+                <Button
+                    isLoading={isLoading}
+                    color="warning"
+                    variant="shadow"
+                    onPress={() => otpGenerate(email)}
+                    radius='sm'
+                    spinner={
+                        <svg
+                            className="animate-spin h-5 w-5 text-current"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                            />
+                            <path
+                                className="opacity-75"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                    }
+                    className="text-sm md:text-md"
+                    isDisabled={isLoading}
+                >
+                    {isLoading ? 'Loading...' : 'Generate Access Key'}
+                </Button>
+            </div>
             <Modal
-                isOpen={isOpen && !isLoading}
+                isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 placement="top-center"
                 radius='sm'

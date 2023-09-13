@@ -1,7 +1,7 @@
 import { TextServiceClient } from "@google-ai/generativelanguage";
 import { GoogleAuth } from "google-auth-library";
 import { NextApiRequest, NextApiResponse } from "next";
-import AccessKey from "./db/model/accessKeyModel";
+import AccessKey from "./db/models/accessKeyModel";
 import connectDB from "./db/config";
 
 connectDB();
@@ -98,7 +98,7 @@ export default async function handler(
 
     if (cache.has(promptString)) {
       const cachedData = cache.get(promptString);
-      return res.status(200).json(cachedData);
+      return res.status(200).json(cachedData?.[0]?.candidates?.[0]?.output);
     }
 
     const generationPromise = (async () => {
@@ -129,7 +129,13 @@ export default async function handler(
         accessKey.totalRequests = accessKey.totalRequests + 1;
         await accessKey.save();
       }
-      res.status(200).json(data);
+      const output = data?.[0]?.candidates?.[0]?.output;
+
+      if (output) {
+        res.status(200).json(output);
+      } else {
+        res.status(500).json({ error: "modifying the prompt might help" });
+      }
     } catch (error) {
       console.error("Error:", error);
       res.status(500).json({ error: "Internal server error" });

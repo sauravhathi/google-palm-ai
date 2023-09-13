@@ -1,12 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import connectDB from "./db/config";
-import otpController from "./otpController";
-import methodNotAllowed from "./methodNotAllowed";
+import otpController from "./controllers/otpController";
+import methodNotAllowed from "./utils/methodNotAllowed";
 
 async function otpVerifyHandler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    return methodNotAllowed(res);
-  }
+  
+  if (req.method !== "POST") return methodNotAllowed(res);
 
   const { email, otp } = req.body;
 
