@@ -1,8 +1,15 @@
-import Otp from "./db/model/otpModel";
-const validityPeriodMinutes = parseInt(
-  process.env.OTP_VALIDITY_PERIOD_MINUTES || "5"
-);
-const OTP_SIZE = parseInt(process.env.OTP_SIZE || "4");
+import Otp from "../db/models/otpModel";
+
+const parseEnvInt = (envVar: string, defaultValue: number) => {
+  const value = parseInt(process.env[envVar] || "");
+  return isNaN(value) ? defaultValue : value;
+};
+
+const validityPeriodMinutes = parseEnvInt("OTP_VALIDITY_PERIOD_MINUTES", 5);
+const OTP_SIZE = parseEnvInt("OTP_SIZE", 4);
+const MAX_OTP_ATTEMPTS = parseEnvInt("MAX_OTP_ATTEMPTS", 3);
+const MAX_OTP_ATTEMPTS_PERIOD_MINUTES = parseEnvInt("MAX_OTP_ATTEMPTS_PERIOD_MINUTES", 30);
+
 
 const generateOTP = (size: number) => {
   if (size < 1 && size > 10) {
@@ -29,6 +36,19 @@ const otpController = {
         return existingOtp.otp;
       }
 
+      const otpDocumentCountBefore = await Otp.countDocuments({
+        email: email,
+        createdAt: {
+          $gte: new Date(
+            new Date().getTime() - MAX_OTP_ATTEMPTS_PERIOD_MINUTES * 60000
+          ),
+        },
+      });
+
+      if (otpDocumentCountBefore >= MAX_OTP_ATTEMPTS) {
+        throw new Error(`Maximum ${MAX_OTP_ATTEMPTS} OTP attempts exceeded. Please try again after ${MAX_OTP_ATTEMPTS_PERIOD_MINUTES} minutes.`);
+      }
+
       const otp = generateOTP(OTP_SIZE);
 
       const otpDocument = new Otp({
@@ -42,7 +62,7 @@ const otpController = {
       return otp;
     } catch (error: any) {
       console.error(error);
-      throw new Error("Failed to generate OTP");
+      throw new Error(error.message);
     }
   },
   verifyOtp: async (email: string, otp: number) => {

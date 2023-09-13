@@ -1,4 +1,4 @@
-import otpController from '../otpController';
+import otpController from "../controllers/otpController";
 
 export async function clearExpiredOtps() {
     try {

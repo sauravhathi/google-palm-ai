@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Card, CardHeader, Button, Textarea, Checkbox, Avatar, useDisclosure, Modal, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Card, CardHeader, Button, Checkbox, Avatar, useDisclosure, Modal, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import axios from 'axios';
 import { remark } from 'remark';
 import html from 'remark-html';
@@ -21,7 +21,6 @@ export default function Home() {
 
   const [accessKey, setAccessKey] = useState<string | undefined>(() => {
     if (process.env.NODE_ENV === 'development') {
-      console.log(process.env.NODE_ENV);
       return ACCESS_KEY;
     }
     else {
@@ -61,11 +60,7 @@ export default function Home() {
           }
         }
       );
-
-      const { data } = res;
-      const { candidates } = data[0];
-      const { output } = candidates[0];
-      setResult(output);
+      setResult(res.data);
       setIsLoading(false);
     } catch (err: any) {
       setIsLoading(false);
@@ -211,8 +206,8 @@ export default function Home() {
               <>
                 <CardHeader className="flex justify-end p-2 pb-8 -z-1">
                   <Button
-                    className={isCopied ? 'border-default-200' : 'text-gray-500'}
-                    variant={isCopied ? "light" : "bordered"}
+                  color="default"
+                    variant={isCopied ? 'solid' : 'faded'}
                     onClick={handleCopy}
                     radius='sm'
                     size='sm'
