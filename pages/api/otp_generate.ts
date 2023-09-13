@@ -44,9 +44,9 @@ export default async function handler(
     await sendOtpEmail(email, otp);
 
     return res.status(200).json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: error.message });
   }
 }
 
