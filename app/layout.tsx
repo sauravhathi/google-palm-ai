@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: 'Google Palm Ai',
   description: 'Google Palm Ai is a tool that uses Google\'s Palm AI to generate text based on a prompt.',
   keywords: 'Google Palm Ai, Google, Palm, Ai, ai, google, google ai, google palm ai, palm ai, palm google ai, google palm, palm google',
+  authors: [{ name: 'Saurav Hathi' }, { name: 'Saurav Hathi', url: 'https://github.com/sauravhathi' }],
+  creator: 'Saurav Hathi',
+  publisher: 'Saurav Hathi',
+  viewport: 'width=device-width, initial-scale=0.1',
+  
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
