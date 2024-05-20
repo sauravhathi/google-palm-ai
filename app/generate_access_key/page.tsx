@@ -81,7 +81,7 @@ export default function GenerateAccessKey() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto flex flex-col gap-4">
+        <div className="max-w-2xl mx-auto flex flex-col gap-4 py-5">
             <Input
                 type="email"
                 variant="bordered"

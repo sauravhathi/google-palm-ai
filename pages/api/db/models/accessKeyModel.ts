@@ -8,7 +8,7 @@ const accessKeySchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
-    required: true,
+    required: [true, "Email is required"]
   },
   totalRequests: {
     type: Number,
@@ -16,7 +16,7 @@ const accessKeySchema = new mongoose.Schema({
   },
   maxRequests: {
     type: Number,
-    default: process.env.MAX_REQUESTS_API_KEY || 15,
+    default: process.env.MAX_REQUESTS_API_KEY || 10,
   },
   createdAt: {
     type: Date,

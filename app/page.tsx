@@ -95,7 +95,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-center">
           Google Palm Ai
         </h1>
-        <Avatar isBordered color="primary" size='lg' src="https://github.com/sauravhathi/sauravhathi/assets/61316762/a333b8ba-a49e-43ce-b81c-4481f0e8fce0" onMouseEnter={() => setIsAvatarHovered(true)} onMouseLeave={() => setIsAvatarHovered(false)} className="w-16 h-16" />
+        <Avatar isBordered color="primary" size='lg' src="https://github.com/sauravhathi/sauravhathi/assets/61316762/a333b8ba-a49e-43ce-b81c-4481f0e8fce0" onMouseEnter={() => setIsAvatarHovered(true)} onMouseLeave={() => setIsAvatarHovered(false)} className="w-16 h-16 select-none" />
       </a>
       <div className="flex flex-col items-center justify-center gap-10 px-5 md:px-0">
         <div className="max-w-2xl w-full flex flex-col gap-2">

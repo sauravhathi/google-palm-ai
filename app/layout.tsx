@@ -18,11 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className='dark'>
       <body>
-        <main className="min-h-screen flex flex-col gap-10 mt-10 md:mt-20 relative">
+        <main className="min-h-screen flex flex-col gap-10 py-5 relative">
           <Providers>
             {children}
           </Providers>
-          <footer className="flex flex-col items-center justify-center gap-2 mb-10">
+          <footer className="flex flex-col items-center justify-center gap-2">
             <p className="text-gray-500 text-sm">
               Made with ❤️ by <a href="https://github.com/sauravhathi" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:underline">Saurav Hathi</a>
             </p>
