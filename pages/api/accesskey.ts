@@ -22,7 +22,7 @@ const randomizeEmail = (email: string): string => {
   const parts = email.split("@");
   if (parts.length === 2) {
     const username = parts[0];
-    const randomizedUsername = generateRandomString(username.length + 30);
+    const randomizedUsername = generateRandomString(username.length + 16);
     return randomizedUsername;
   }
   return email;
@@ -54,7 +54,7 @@ export default async function handler(
     return res.status(400).json({ error: "Invalid email" });
   }
 
-  const isExisting = await await AccessKey.findOne({ email });
+  const isExisting = await AccessKey.findOne({ email });
 
   if (isExisting) {
     return res.status(400).json({
