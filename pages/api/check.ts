@@ -51,9 +51,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const sh = req.query.sh as string;
-
-    if (sh !== "si") {
+    if (process.env.SECRET_HEADER_VALUE !== process.env.CHECK_SECRET) {
         return res.status(403).json({ error: "Forbidden" });
     }
 
