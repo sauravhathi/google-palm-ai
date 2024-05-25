@@ -3,9 +3,9 @@ import type { NextRequest } from 'next/server'
  
 export function middleware(req: NextRequest) {
     const url = req.nextUrl.pathname
-    const search = req.nextUrl.searchParams.get('sh')
+    const search = req.nextUrl.searchParams.get(process.env.SECRET_HEADER_KEY as string)
 
-    if (url.startsWith('/check') && search !== 'si') {
+    if (url.startsWith('/check') && search !== process.env.SECRET_HEADER_VALUE) {
         return NextResponse.redirect(new URL('/', req.nextUrl).toString())
     }
     return NextResponse.next()
