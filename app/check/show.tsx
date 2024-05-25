@@ -44,7 +44,7 @@ export default function Show() {
 
     const updateAccessKey = async (data: any) => {
         try {
-            const res = await fetch(`/api/check?sh=si`, {
+            const res = await fetch(`/api/check`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function Show() {
     };
 
     const debouncedSearch = useDebounce(search, 700);
-    const { data, isLoading, mutate } = useSWR(path + `/api/check?sh=si&page=${page}&search=${debouncedSearch}`, fetcher, {
+    const { data, isLoading, mutate } = useSWR(path + `/api/check?page=${page}&search=${debouncedSearch}`, fetcher, {
         keepPreviousData: true,
         refreshInterval: 1000 * 60 * 3,
     });
