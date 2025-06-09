@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react";
 import axios from 'axios';
 
@@ -79,6 +79,15 @@ export default function GenerateAccessKey() {
             handleErrors(err);
         }
     }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (typeof window !== "undefined") {
+                window.location.href = "https://algoplug.com/products/scrynai";
+            }
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <div className="max-w-2xl mx-auto flex flex-col gap-4 py-5">
